@@ -22,7 +22,7 @@ const DATABASE_URL =
   "postgresql://bookingdb_owner:npg_wLlqgXz2QaW8@ep-aged-snowflake-a53w18dx-pooler.us-east-2.aws.neon.tech/bookingdb?sslmode=require";
 const sql = neon(DATABASE_URL);
 
-const port = 3000;
+const port = 3001;
 app.listen(port, () =>
   console.log(`My App listening at http://localhost:${port}`)
 );
