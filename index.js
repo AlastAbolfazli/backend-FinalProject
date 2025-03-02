@@ -1,5 +1,6 @@
 const express = require("express");
 const { Client } = require("pg");
+require('dotenv').config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { neon } = require("@neondatabase/serverless");
