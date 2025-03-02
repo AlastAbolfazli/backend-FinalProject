@@ -1,6 +1,6 @@
 const express = require("express");
 const { Client } = require("pg");
-require('dotenv').config();
+require("dotenv").config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { neon } = require("@neondatabase/serverless");
@@ -9,7 +9,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://188.121.110.151"],
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -31,7 +31,7 @@ app.listen(port, () =>
 //   try {
 //     const query = `SELECT id, name, location, description, price, rating FROM hotels`;
 //     const result = await sql(query);
-//     console.log("Backend Fetched Hotels:", result); 
+//     console.log("Backend Fetched Hotels:", result);
 //     res.json(result);
 //   } catch (err) {
 //     console.error("Error fetching hotels: ", err);
@@ -142,7 +142,7 @@ app.post("/api/reservations", async (req, res) => {
     return res.status(404).json({ error: "User not found" });
   }
 
-  const user_id = userResult[0].id; 
+  const user_id = userResult[0].id;
   const roomQuery = "SELECT id FROM rooms WHERE available = TRUE LIMIT 1";
   const roomResult = await sql(roomQuery);
 
@@ -150,7 +150,7 @@ app.post("/api/reservations", async (req, res) => {
     return res.status(400).json({ error: "No available rooms" });
   }
 
-  const room_id = roomResult[0].id; 
+  const room_id = roomResult[0].id;
 
   const query = `
     INSERT INTO reservations (
@@ -171,8 +171,8 @@ app.post("/api/reservations", async (req, res) => {
   `;
 
   const values = [
-    user_id, 
-    room_id, 
+    user_id,
+    room_id,
     firstName,
     lastName,
     email,
@@ -246,7 +246,7 @@ const getUserByEmailAndPassword = async (email, password) => {
     console.error("Error during login:", error);
     throw error;
   } finally {
-    client.end(); 
+    client.end();
   }
 };
 
@@ -391,7 +391,7 @@ app.post("/api/feedback", async (req, res) => {
     `;
     const values = [userId, rating, comment];
 
-    const result = await sql(query, values); 
+    const result = await sql(query, values);
 
     res.status(201).json({
       message: "Feedback submitted successfully!",
@@ -526,7 +526,7 @@ app.post("/api/hotels", authenticateAdmin, async (req, res) => {
       price,
       rating,
     ]);
-    const newHotel = result[0]; 
+    const newHotel = result[0];
 
     res.status(201).json(newHotel);
   } catch (err) {
@@ -592,7 +592,7 @@ app.delete("/api/hotels/:hotelName", authenticateAdmin, async (req, res) => {
 // Fetch all feedbacks for admin to manage
 app.get("/api/feedbacks", authenticateAdmin, async (req, res) => {
   try {
-    const query = "SELECT * FROM feedbacks"; 
+    const query = "SELECT * FROM feedbacks";
     const result = await sql(query);
     res.json(result);
   } catch (err) {
@@ -678,7 +678,7 @@ app.post("/api/rooms/:hotelId", authenticateAdmin, async (req, res) => {
       capacity,
       available,
     ]);
-    res.status(201).json(result[0]); 
+    res.status(201).json(result[0]);
   } catch (err) {
     console.error("Error adding room:", err);
     res.status(500).json({ error: "Failed to add room" });
